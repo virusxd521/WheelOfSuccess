@@ -20,23 +20,31 @@ const phrases = [
 
 start_game_button.addEventListener("click", event => {
     overlay_div.style.display = "none";
+    if(overlay_div.classList[0] === "lose" || overlay_div.classList[0] === "win"){
+        location.reload();
+    }
+    
 });
 
 function getRandomPhraseAsArray(arr){
     const charArr = [];
     charArr.push(arr[Math.floor(Math.random() * arr.length)]);
-    const afterSplit = charArr[0].split(" ");
+    const afterSplit = charArr[0].split(/(?= )/);
     let onlyLetters = [];
     for(let i = 0; i < afterSplit.length; i++){
-        for(let j = 0; j < afterSplit[i].length; j++){
-            console.log(afterSplit[i][j]);
-            if(afterSplit[i][j].match(/[A-Za-z]/)){
+        console.log(afterSplit, 2222);
+        const space = " "
+        
+        console.log(afterSplit[i]);
+        for(let j = 0; j < afterSplit[i].length; j++){    
+            if(afterSplit[i][j].match(/[A-Za-z]|\s/)){
                 onlyLetters.push(afterSplit[i][j].toLowerCase());
             }
             
         }
         
     }
+    console.log(onlyLetters);
     return onlyLetters;
 };
 
@@ -47,7 +55,11 @@ function addPhraseToDisplay(arr){
     phrases_word.forEach(item => {
         const li = document.createElement("li");
         li.textContent = item;
-        li.setAttribute("class", "letter");
+        if(item !== " "){
+            li.setAttribute("class", "letter");   
+        } else {
+            li.setAttribute("class", "space");   
+        }
         return ul.appendChild(li);
         
     })
@@ -86,20 +98,24 @@ function removeTries(){
 }
 
 
-document.addEventListener("keydown", event => {
-    for(let i = 0; i < keyrow.length; i++){
-        let allButtons = keyrow[i].children;
-        for(let j = 0; j < allButtons.length; j++){
-            if(event.key === allButtons[j].textContent && 
-                allButtons[j].classList[0] !== "chosen"){
-                    allButtons[j].setAttribute("class", "chosen");
-                    let letterFound = checkLetter(allButtons[j]);
-                    if(letterFound === null){
-                        removeTries();
+wheel_words.addEventListener("click", event => {
+    const theButton = event.target.textContent.trim();
+    if(theButton !== "qwertyuiop"){
+        for(let i = 0; i < keyrow.length; i++){
+            let allButtons = keyrow[i].children;
+            for(let j = 0; j < allButtons.length; j++){
+                if(theButton === allButtons[j].textContent && 
+                    allButtons[j].classList[0] !== "chosen"){
+                        allButtons[j].setAttribute("class", "chosen");
+                        let letterFound = checkLetter(allButtons[j]);
+                        if(letterFound === null){
+                            removeTries();
+                        }
                     }
-                }
+            }
         }
     }
+
     checkWin();
 });
 
