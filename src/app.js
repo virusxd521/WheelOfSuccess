@@ -37,6 +37,8 @@ function getRandomPhraseAsArray(arr){
         
         console.log(afterSplit[i]);
         for(let j = 0; j < afterSplit[i].length; j++){    
+            // Regex to filter only letters and spaces ------------------------------------
+            //  -------------------------------------------------------------------------------------------
             if(afterSplit[i][j].match(/[A-Za-z]|\s/)){
                 onlyLetters.push(afterSplit[i][j].toLowerCase());
             }
